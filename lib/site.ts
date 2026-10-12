@@ -3,12 +3,12 @@
  * Change the brand, domain or contact email here and it updates everywhere.
  */
 
-export const SITE_NAME = "CalcSolver";
+export const SITE_NAME = "SolverCalc";
 
 /** Production URL without a trailing slash. Can be overridden with NEXT_PUBLIC_SITE_URL. */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.calcsolver.com").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.solvercalc.app").replace(/\/$/, "");
 
-export const SITE_EMAIL = "hello@calcsolver.com";
+export const SITE_EMAIL = "hello@solvercalc.app";
 
 export const SITE_TAGLINE = "Free online scientific solve calculator for students, teachers and professionals.";
 
@@ -61,6 +61,7 @@ export const NAV_LINKS: NavLink[] = [
 export const FOOTER_CALCULATOR_LINKS: NavLink[] = [
   { label: "Solve Calculator", href: "/#calculator" },
   { label: "Unblocked Calculator", href: "/#calculator-unblocked" },
+  { label: "Calculator Games", href: "/#calculator-games" },
   { label: "Math Solutions", href: "/math" },
   { label: "Fractions", href: "/math#fractions" },
 ];

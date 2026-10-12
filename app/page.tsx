@@ -6,13 +6,21 @@ import {
   Briefcase,
   Check,
   Feather,
+  Gamepad2,
   GraduationCap,
+  Laptop,
   Lightbulb,
+  Percent,
   ShieldCheck,
+  Shuffle,
   Sigma,
   Smartphone,
+  Superscript,
+  TrendingUp,
+  Triangle,
   Users,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
 import Calculator from "@/components/Calculator";
 import FAQ, { type FAQItem } from "@/components/FAQ";
@@ -105,6 +113,20 @@ const FAQS: FAQItem[] = [
       "Yes. The calc is fully responsive with large touch-friendly keys, so it works on phones, tablets, Chromebooks, laptops and desktop computers in any modern browser.",
   },
   {
+    question: "Can the solver calculator solve equations for x?",
+    answer:
+      "The solver calculator evaluates expressions, so you can work through each step of an equation and check your answer by substituting it back in. For full step-by-step methods, read our guides to solving linear equations and solve-for-x basics in the Math Solutions library.",
+  },
+  {
+    question: "Does the unblocked calculator work offline?",
+    answer:
+      "Once the page is open and you have used the calculator once, every calculation runs on your own device, so a dropped Wi-Fi connection will not interrupt you. Reloading the page needs an internet connection.",
+  },
+  {
+    question: `What makes ${SITE_NAME} different from other online calculators?`,
+    answer: `${SITE_NAME} pairs a full scientific solver calculator with step-by-step math solutions, free number games and keyboard shortcuts. There is no sign-up, no download and no tracking of your calculations.`,
+  },
+  {
     question: "Do you store my calculations?",
     answer:
       "No. Every calculation runs inside your own browser. Your history of the last five results lives only in the open page and disappears when you close or refresh it. Nothing is sent to our servers.",
@@ -118,6 +140,122 @@ const HOW_TO_STEPS: [string, string][] = [
   ["Reuse your answer", "Tap Ans or an item in the history list to keep working with a previous result."],
 ];
 
+/** Every result below was checked against the calculator (10 significant digits). */
+const SOLVE_EXAMPLES: { problem: string; input: string; result: string; useCase: string }[] = [
+  { problem: "Sine of 45°", input: "sin(45)", result: "0.7071067812", useCase: "Trigonometry homework" },
+  { problem: "Tangent of 60°", input: "tan(60)", result: "1.732050808", useCase: "Heights of right triangles" },
+  { problem: "Log base 10 of 250", input: "log(250)", result: "2.397940009", useCase: "pH and decibel problems" },
+  { problem: "Natural log of 10", input: "ln(10)", result: "2.302585093", useCase: "Growth and decay models" },
+  { problem: "Square root of 2", input: "√(2)", result: "1.414213562", useCase: "Diagonals and geometry" },
+  { problem: "e cubed", input: "e^3", result: "20.08553692", useCase: "Calculus and statistics" },
+  { problem: "15% of 240", input: "15% × 240", result: "36", useCase: "Discounts and tips" },
+  { problem: "Area of a circle, r = 5", input: "π × 5²", result: "78.53981634", useCase: "Geometry formulas" },
+  { problem: "12 factorial", input: "12!", result: "479001600", useCase: "Probability and arrangements" },
+  { problem: "Order of operations", input: "(3 + 4)² ÷ 7", result: "7", useCase: "Checking PEMDAS steps" },
+  { problem: "$5,000 at 8% for 5 years", input: "5000 × 1.08^5", result: "7346.640384", useCase: "Compound interest" },
+  { problem: "One seventh as a decimal", input: "1 ÷ 7", result: "0.1428571429", useCase: "Fractions to decimals" },
+];
+
+const SOLVE_TOPICS: { icon: LucideIcon; title: string; text: string; href?: string; linkText?: string }[] = [
+  {
+    icon: Sigma,
+    title: "Algebra & Order of Operations",
+    text: "Enter long expressions with nested parentheses and the solver calculator applies PEMDAS for you.",
+    href: "/math/order-of-operations-pemdas",
+    linkText: "Review PEMDAS",
+  },
+  {
+    icon: Triangle,
+    title: "Trigonometry",
+    text: "Sine, cosine and tangent in degrees or radians, with exact results for common angles such as sin(30) = 0.5.",
+  },
+  {
+    icon: TrendingUp,
+    title: "Logarithms & Exponentials",
+    text: "Base-10 log, natural log and e^x for science, finance and growth problems.",
+  },
+  {
+    icon: Superscript,
+    title: "Powers & Roots",
+    text: "Squares, cubes, any power with xʸ, reciprocals and square roots in one tap.",
+  },
+  {
+    icon: Percent,
+    title: "Percentages & Fractions",
+    text: "Turn any fraction into a decimal or percentage, then see the method in our worked guides.",
+    href: "/math/how-to-convert-fraction-to-percentage",
+    linkText: "Convert fractions to percentages",
+  },
+  {
+    icon: Shuffle,
+    title: "Factorials & Probability",
+    text: "Use n! to count arrangements and combinations for probability and statistics homework.",
+  },
+];
+
+const GAMES: { title: string; level: "Easy" | "Medium" | "Hard"; players: string; howTo: string; solution: string }[] = [
+  {
+    title: "Make 24",
+    level: "Medium",
+    players: "1+ players",
+    howTo: "Use the numbers 1, 3, 4 and 6 exactly once with +, −, ×, ÷ and parentheses to make exactly 24.",
+    solution: "6 ÷ (1 − 3 ÷ 4) = 24. Ready for harder? Try 3, 3, 8, 8: 8 ÷ (3 − 8 ÷ 3) = 24.",
+  },
+  {
+    title: "Target 100",
+    level: "Easy",
+    players: "1+ players",
+    howTo: "Use the digits 1 to 9 in order, each one once, with only + and × to reach exactly 100.",
+    solution: "1 + 2 + 3 + 4 + 5 + 6 + 7 + 8 × 9 = 100.",
+  },
+  {
+    title: "Upside-Down Words",
+    level: "Easy",
+    players: "1+ players",
+    howTo: "Type a number, then turn your screen upside down to read it as a word. Which number spells hELLO?",
+    solution: "0.7734 reads hELLO upside down (ignore the decimal point), and 317 spells LIE.",
+  },
+  {
+    title: "Estimation Sprint",
+    level: "Easy",
+    players: "2+ players",
+    howTo: "One player calls out a problem such as 17 × 23. Everyone writes a guess, then the calculator reveals the winner.",
+    solution: "17 × 23 = 391. Swap roles and try 3-digit numbers for a tougher round.",
+  },
+  {
+    title: "Doubling Ladder",
+    level: "Medium",
+    players: "1+ players",
+    howTo: "Start at 1 and keep pressing × 2 then =. Predict how many doublings it takes to pass one million.",
+    solution: "20 doublings: 2²⁰ = 1,048,576, while 2¹⁹ = 524,288 is still below a million.",
+  },
+  {
+    title: "Factorial Race",
+    level: "Hard",
+    players: "2+ players",
+    howTo: "Race to find the smallest whole number n where n! is greater than one million using the n! key.",
+    solution: "n = 10, because 10! = 3,628,800 and 9! = 362,880.",
+  },
+];
+
+const LEVEL_CLASSES: Record<(typeof GAMES)[number]["level"], string> = {
+  Easy: "bg-emerald-100 text-emerald-800 dark:bg-emerald-500/15 dark:text-emerald-300",
+  Medium: "bg-amber-100 text-amber-800 dark:bg-amber-500/15 dark:text-amber-300",
+  Hard: "bg-rose-100 text-rose-800 dark:bg-rose-500/15 dark:text-rose-300",
+};
+
+const SHORTCUTS: [string, string][] = [
+  ["0 – 9  and  .", "Enter numbers and decimals"],
+  ["+  −  *  /", "Add, subtract, multiply and divide"],
+  ["^", "Raise to a power (xʸ)"],
+  ["(  )", "Open and close parentheses"],
+  ["%", "Percent"],
+  ["!", "Factorial"],
+  ["Enter  or  =", "Calculate the answer"],
+  ["Backspace", "Delete the last entry"],
+  ["Esc  or  Delete", "Clear everything (AC)"],
+];
+
 const PAGE_TITLE = `Solve Calculator – Free Scientific Solver | ${SITE_NAME}`;
 const PAGE_DESCRIPTION =
   "Free solve calculator with sin, cos, log, roots and factorials. An unblocked calculator that runs in any browser—no download, no sign-up.";
@@ -128,6 +266,7 @@ const ids = {
   faq: `${SITE_URL}/#faq`,
   howTo: `${SITE_URL}/#how-to-use`,
   library: `${SITE_URL}/#math-solutions`,
+  games: `${SITE_URL}/#calculator-games`,
   image: `${SITE_URL}/#primaryimage`,
 };
 
@@ -152,7 +291,7 @@ const homepageJsonLd = {
       primaryImageOfPage: { "@id": ids.image },
       dateModified: LAST_UPDATED,
       publisher: { "@id": SCHEMA_IDS.organization },
-      hasPart: [{ "@id": ids.howTo }, { "@id": ids.faq }, { "@id": ids.library }],
+      hasPart: [{ "@id": ids.howTo }, { "@id": ids.faq }, { "@id": ids.library }, { "@id": ids.games }],
     },
     {
       "@type": "ImageObject",
@@ -230,6 +369,19 @@ const homepageJsonLd = {
         name: article.title,
       })),
     },
+    {
+      "@type": "ItemList",
+      "@id": ids.games,
+      name: "Calculator Games You Can Play Unblocked",
+      numberOfItems: GAMES.length,
+      itemListElement: GAMES.map((game, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: game.title,
+        description: game.howTo,
+        url: `${SITE_URL}/#calculator-games`,
+      })),
+    },
   ],
 };
 
@@ -242,6 +394,8 @@ export const metadata: Metadata = {
     "unblocked calculator",
     "scientific calculator online",
     "free online calc",
+    "calculator unblocked games",
+    "solvercalc",
   ],
 };
 
@@ -404,7 +558,75 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 5. Calculator unblocked */}
+      {/* 5. Solve calculator examples */}
+      <section id="solve-calculator-examples" aria-labelledby="examples-title" className={`${sectionClass} bg-gray-50 dark:bg-gray-900/40`}>
+        <div className={containerClass}>
+          <SectionHeading
+            id="examples-title"
+            eyebrow="Examples"
+            title="Solve Calculator Examples"
+            subtitle="Real problems you can solve right now. Type the input exactly as shown and press = to get the same answer."
+          />
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <caption className="sr-only">Example problems, what to type into the solve calculator, and the result</caption>
+              <thead className="bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white">
+                <tr>
+                  <th scope="col" className="px-4 py-3 font-semibold">Problem</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">What to type</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Result</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Useful for</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 text-gray-700 dark:divide-gray-800 dark:text-gray-300">
+                {SOLVE_EXAMPLES.map((example) => (
+                  <tr key={example.problem}>
+                    <th scope="row" className="px-4 py-3 font-medium text-gray-900 dark:text-white">{example.problem}</th>
+                    <td className="px-4 py-3">
+                      <code className="rounded-md bg-gray-100 px-2 py-1 font-mono text-indigo-700 dark:bg-gray-800 dark:text-indigo-300">
+                        {example.input}
+                      </code>
+                    </td>
+                    <td className="px-4 py-3 font-mono font-semibold tabular-nums text-gray-900 dark:text-white">{example.result}</td>
+                    <td className="px-4 py-3">{example.useCase}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p className="mt-4 text-center text-sm text-gray-500 dark:text-gray-400">
+            Results are rounded to 10 significant digits. Trig examples use DEG mode.
+          </p>
+        </div>
+      </section>
+
+      {/* 6. What the solver calculator can solve */}
+      <section id="what-it-solves" aria-labelledby="solves-title" className={sectionClass}>
+        <div className={containerClass}>
+          <SectionHeading
+            id="solves-title"
+            title="What Can the Solver Calculator Solve?"
+            subtitle="One free solver calculator covers the math you meet from middle school to college and on the job."
+          />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {SOLVE_TOPICS.map((topic) => (
+              <FeatureCard key={topic.title} icon={topic.icon} title={topic.title}>
+                {topic.text}
+                {topic.href ? (
+                  <>
+                    {" "}
+                    <Link href={topic.href} className="font-medium text-indigo-700 hover:underline dark:text-indigo-300">
+                      {topic.linkText}
+                    </Link>
+                  </>
+                ) : null}
+              </FeatureCard>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 7. Calculator unblocked */}
       <section id="calculator-unblocked" aria-labelledby="unblocked-title" className={`${sectionClass} bg-gray-50 dark:bg-gray-900/40`}>
         <div className={`${containerClass} grid gap-10 lg:grid-cols-2`}>
           <div>
@@ -421,49 +643,101 @@ export default function HomePage() {
                 ask every visitor to respect their school’s or employer’s technology policy.
               </p>
             </div>
+            <h3 className="mt-8 flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
+              <Laptop className="h-5 w-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+              Add the unblocked calculator to your Chromebook
+            </h3>
+            <ol className="mt-3 list-decimal space-y-2 pl-5 text-gray-600 dark:text-gray-300">
+              <li>Open {SITE_NAME} in Chrome.</li>
+              <li>Select the three-dot menu (⋮) in the top-right corner.</li>
+              <li>
+                Choose <strong className="text-gray-900 dark:text-white">Cast, save and share → Install page as app</strong>{" "}
+                (called <strong className="text-gray-900 dark:text-white">Create shortcut</strong> in older versions).
+              </li>
+              <li>Open it from your shelf or launcher like any other app.</li>
+            </ol>
+            <p className="mt-3 text-sm text-gray-500 dark:text-gray-400">
+              If installing apps is turned off on your device, press Ctrl + D to bookmark the page instead.
+            </p>
           </div>
-          <div className="rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 dark:border-gray-800 dark:bg-gray-900">
+          <div className="self-start rounded-2xl border border-gray-200 bg-white p-6 sm:p-8 dark:border-gray-800 dark:bg-gray-900">
             <h3 className="flex items-center gap-2 text-xl font-semibold text-gray-900 dark:text-white">
               <Lightbulb className="h-5 w-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
               Calculator Unblocked Games &amp; Number Puzzles
             </h3>
             <p className="mt-3 text-gray-600 dark:text-gray-300">
               Looking for calculator unblocked games? Skip the downloads and turn the calculator itself into a
-              challenge. Each calculator game unblocked here takes a minute to learn:
+              challenge. Every calculator game unblocked on this page needs nothing but the keypad and a few minutes.
             </p>
-            <ul className="mt-4 space-y-4">
-              <li>
-                <strong className="text-gray-900 dark:text-white">Make 24:</strong>{" "}
-                <span className="text-gray-600 dark:text-gray-300">
-                  Pick four numbers (say 3, 3, 8, 8) and use +, −, ×, ÷ and parentheses to reach exactly 24. Hint:
-                  8 ÷ (3 − 8 ÷ 3).
-                </span>
-              </li>
-              <li>
-                <strong className="text-gray-900 dark:text-white">Guess the square root:</strong>{" "}
-                <span className="text-gray-600 dark:text-gray-300">
-                  Estimate √200 to one decimal place, then check with the √ key. Closest guess wins (it is about 14.1).
-                </span>
-              </li>
-              <li>
-                <strong className="text-gray-900 dark:text-white">Factorial race:</strong>{" "}
-                <span className="text-gray-600 dark:text-gray-300">
-                  Who can name the smallest n where n! passes one million? Test your guesses with the n! key.
-                </span>
-              </li>
-              <li>
-                <strong className="text-gray-900 dark:text-white">Percentage sprint:</strong>{" "}
-                <span className="text-gray-600 dark:text-gray-300">
-                  Call out a fraction like 7/20 and race to say its percentage before the calculator does.
-                </span>
-              </li>
+            <ul className="mt-4 space-y-2 text-gray-600 dark:text-gray-300">
+              {GAMES.slice(0, 4).map((game) => (
+                <li key={game.title} className="flex items-center gap-2">
+                  <Check className="h-4 w-4 shrink-0 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+                  {game.title}
+                </li>
+              ))}
             </ul>
+            <a
+              href="#calculator-games"
+              className="mt-6 inline-flex min-h-11 items-center gap-2 rounded-xl bg-indigo-600 px-5 font-semibold text-white hover:bg-indigo-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            >
+              See all {GAMES.length} calculator games
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
           </div>
         </div>
       </section>
 
-      {/* 6. Quick answers */}
-      <section id="quick-answers" aria-labelledby="quick-answers-title" className={sectionClass}>
+      {/* 8. Calculator games */}
+      <section id="calculator-games" aria-labelledby="games-title" className={sectionClass}>
+        <div className={containerClass}>
+          <SectionHeading
+            id="games-title"
+            eyebrow="Play"
+            title="Calculator Games You Can Play Unblocked"
+            subtitle="Quick number challenges for class warm-ups, study breaks or a friendly race. Use the calculator above to check every answer."
+          />
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {GAMES.map((game) => (
+              <article
+                key={game.title}
+                className="flex flex-col rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <h3 className="flex items-center gap-2 text-lg font-semibold text-gray-900 dark:text-white">
+                    <Gamepad2 className="h-5 w-5 text-indigo-600 dark:text-indigo-400" aria-hidden="true" />
+                    {game.title}
+                  </h3>
+                  <span className={`rounded-full px-2.5 py-0.5 text-xs font-semibold ${LEVEL_CLASSES[game.level]}`}>
+                    {game.level}
+                  </span>
+                </div>
+                <p className="mt-1 text-xs font-medium uppercase tracking-wide text-gray-500 dark:text-gray-400">{game.players}</p>
+                <p className="mt-3 flex-1 text-gray-600 dark:text-gray-300">{game.howTo}</p>
+                <details className="group mt-4 rounded-xl bg-gray-50 px-4 py-2 dark:bg-gray-800/60">
+                  <summary className="flex min-h-10 cursor-pointer list-none items-center justify-between text-sm font-semibold text-indigo-700 focus-visible:outline-2 focus-visible:outline-indigo-600 dark:text-indigo-300 [&::-webkit-details-marker]:hidden">
+                    Show a solution
+                    <ArrowRight className="h-4 w-4 transition-transform group-open:rotate-90" aria-hidden="true" />
+                  </summary>
+                  <p className="pb-2 text-sm text-gray-700 dark:text-gray-300">{game.solution}</p>
+                </details>
+              </article>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <a
+              href="#calculator"
+              className="inline-flex min-h-11 items-center gap-2 rounded-xl px-5 font-semibold text-indigo-700 ring-1 ring-indigo-200 hover:bg-indigo-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 dark:text-indigo-300 dark:ring-indigo-800 dark:hover:bg-indigo-950"
+            >
+              Open the calculator to play
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* 9. Quick answers */}
+      <section id="quick-answers" aria-labelledby="quick-answers-title" className={`${sectionClass} bg-gray-50 dark:bg-gray-900/40`}>
         <div className={containerClass}>
           <SectionHeading
             id="quick-answers-title"
@@ -495,8 +769,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 7. Math solutions library */}
-      <section id="math-solutions" aria-labelledby="library-title" className={`${sectionClass} bg-gray-50 dark:bg-gray-900/40`}>
+      {/* 10. Math solutions library */}
+      <section id="math-solutions" aria-labelledby="library-title" className={sectionClass}>
         <div className={containerClass}>
           <SectionHeading
             id="library-title"
@@ -538,8 +812,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 8. Audiences */}
-      <section id="who-its-for" aria-labelledby="audience-title" className={sectionClass}>
+      {/* 11. Audiences */}
+      <section id="who-its-for" aria-labelledby="audience-title" className={`${sectionClass} bg-gray-50 dark:bg-gray-900/40`}>
         <div className={containerClass}>
           <SectionHeading id="audience-title" title="Perfect for Students and Professionals" />
           <div className="grid gap-6 md:grid-cols-3">
@@ -559,7 +833,48 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 9. Comparison */}
+      {/* 12. Keyboard shortcuts */}
+      <section id="keyboard-shortcuts" aria-labelledby="shortcuts-title" className={sectionClass}>
+        <div className={`${containerClass} grid items-start gap-10 lg:grid-cols-2`}>
+          <div>
+            <SectionHeading id="shortcuts-title" eyebrow="Tips" title="Calc Keyboard Shortcuts" align="left" />
+            <div className="-mt-4 space-y-4 text-gray-600 dark:text-gray-300">
+              <p>
+                Typing is the fastest way to use this free online calc on a laptop, desktop or Chromebook. Click
+                anywhere on the page and start typing—no need to aim for buttons.
+              </p>
+              <p>
+                On phones and tablets, the large touch keys do the same job. Use the history list to reuse any of
+                your last five answers, or tap <strong className="text-gray-900 dark:text-white">Ans</strong> to
+                continue from the previous result.
+              </p>
+            </div>
+          </div>
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900">
+            <table className="w-full text-left text-sm">
+              <caption className="sr-only">Keyboard shortcuts for the online calculator</caption>
+              <thead className="bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-white">
+                <tr>
+                  <th scope="col" className="px-4 py-3 font-semibold">Key</th>
+                  <th scope="col" className="px-4 py-3 font-semibold">Action</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 dark:divide-gray-800">
+                {SHORTCUTS.map(([keys, action]) => (
+                  <tr key={keys}>
+                    <th scope="row" className="whitespace-pre px-4 py-3 font-mono font-semibold text-indigo-700 dark:text-indigo-300">
+                      {keys}
+                    </th>
+                    <td className="px-4 py-3 text-gray-700 dark:text-gray-300">{action}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      {/* 13. Comparison */}
       <section id="online-vs-physical" aria-labelledby="compare-title" className={`${sectionClass} bg-gray-50 dark:bg-gray-900/40`}>
         <div className={containerClass}>
           <SectionHeading
@@ -598,7 +913,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 10. FAQ */}
+      {/* 14. FAQ */}
       <section id="faq" aria-labelledby="faq-title" className={sectionClass}>
         <div className={containerClass}>
           <SectionHeading
@@ -610,7 +925,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 11. Final CTA */}
+      {/* 15. Final CTA */}
       <section id="get-started" aria-labelledby="cta-title" className="px-4 pb-20 sm:px-6">
         <div className="mx-auto max-w-4xl rounded-2xl bg-indigo-600 px-6 py-12 text-center text-white shadow-lg sm:px-12">
           <h2 id="cta-title" className="text-2xl font-bold sm:text-3xl">

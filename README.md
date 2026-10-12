@@ -1,4 +1,4 @@
-# CalcSolver – Free Online Solve Calculator
+# SolverCalc – Free Online Solve Calculator
 
 A Next.js 15 (App Router) website with a scientific solve calculator on the homepage, SEO-focused content
 sections, 12 step-by-step math articles, and all standard legal and info pages.
@@ -50,9 +50,9 @@ public/images/           Illustration used on the homepage
 Edit `lib/site.ts`:
 
 ```ts
-export const SITE_NAME = "CalcSolver";
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.calcsolver.com").replace(/\/$/, "");
-export const SITE_EMAIL = "hello@calcsolver.com";
+export const SITE_NAME = "SolverCalc";
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.solvercalc.app").replace(/\/$/, "");
+export const SITE_EMAIL = "hello@solvercalc.app";
 ```
 
 - `SITE_NAME` updates the header, footer, titles, Open Graph image, JSON-LD and legal pages.
@@ -80,7 +80,7 @@ silently drops spam caught by the honeypot field and returns `{ ok: true }`.
    ```
    RESEND_API_KEY=re_xxxxxxxx
    CONTACT_TO_EMAIL=you@yourdomain.com
-   CONTACT_FROM_EMAIL=CalcSolver <noreply@yourdomain.com>
+   CONTACT_FROM_EMAIL=SolverCalc <noreply@yourdomain.com>
    ```
 3. Redeploy. Messages are now emailed to `CONTACT_TO_EMAIL` with the visitor's address as reply-to.
 
