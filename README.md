@@ -118,3 +118,10 @@ homepage library link, related links and JSON-LD are generated automatically.
    `CONTACT_TO_EMAIL`, `CONTACT_FROM_EMAIL`).
 4. Deploy, then add your custom domain under **Settings → Domains**.
 5. Submit `https://your-domain.com/sitemap.xml` in Google Search Console.
+
+## Light and dark theme
+
+The sun/moon button in the header switches between light and dark themes. The choice is saved in
+`localStorage` under `theme`; visitors who never choose follow their device setting. An inline script in
+`app/layout.tsx` (from `lib/theme.ts`) applies the theme before the first paint to avoid a flash, and
+Tailwind's `dark:` variant is bound to the `dark` class on `<html>` in `app/globals.css`.

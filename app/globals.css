@@ -1,11 +1,18 @@
 @import "tailwindcss";
 
+/* Dark mode is driven by the "dark" class on <html> (set by the theme script / ThemeToggle). */
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme inline {
   --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
+}
+
+:root.dark {
+  color-scheme: dark;
 }
 
 html {
@@ -97,24 +104,26 @@ body {
   color: #111827;
 }
 
-@media (prefers-color-scheme: dark) {
-  .content {
-    color: #d1d5db;
-  }
-  .content h2,
-  .content h3,
-  .content strong,
-  .content th {
-    color: #ffffff;
-  }
-  .content a {
-    color: #818cf8;
-  }
-  .content th {
-    background: #111827;
-  }
-  .content th,
-  .content td {
-    border-color: #1f2937;
-  }
+.dark .content {
+  color: #d1d5db;
+}
+
+.dark .content h2,
+.dark .content h3,
+.dark .content strong,
+.dark .content th {
+  color: #ffffff;
+}
+
+.dark .content a {
+  color: #818cf8;
+}
+
+.dark .content th {
+  background: #111827;
+}
+
+.dark .content th,
+.dark .content td {
+  border-color: #1f2937;
 }
