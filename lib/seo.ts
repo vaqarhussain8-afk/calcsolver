@@ -1,5 +1,15 @@
 import type { Metadata } from "next";
-import { SITE_EMAIL, SITE_LOCALE, SITE_NAME, SITE_URL, absoluteUrl } from "./site";
+import {
+  LOGO_PATH,
+  OG_IMAGE_PATH,
+  SITE_DESCRIPTION,
+  SITE_EMAIL,
+  SITE_LOCALE,
+  SITE_NAME,
+  SITE_URL,
+  SOCIAL_PROFILES,
+  absoluteUrl,
+} from "./site";
 
 type PageMetaInput = {
   title: string;
@@ -26,7 +36,7 @@ export function pageMetadata({
   modifiedTime,
 }: PageMetaInput): Metadata {
   const fullTitle = absoluteTitle ? title : `${title} | ${SITE_NAME}`;
-  const images = [{ url: "/opengraph-image", width: 1200, height: 630, alt: `${SITE_NAME} – Free Online Solve Calculator` }];
+  const images = [{ url: OG_IMAGE_PATH, width: 1200, height: 630, alt: `${SITE_NAME} – Free Online Solve Calculator` }];
   const openGraphBase = {
     url: path,
     title: fullTitle,
@@ -53,24 +63,51 @@ export function pageMetadata({
   };
 }
 
+/** Stable @id values so JSON-LD nodes on different pages and scripts reference each other. */
+export const SCHEMA_IDS = {
+  organization: `${SITE_URL}/#organization`,
+  website: `${SITE_URL}/#website`,
+  logo: `${SITE_URL}/#logo`,
+} as const;
+
 export const organizationJsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  "@id": `${SITE_URL}/#organization`,
+  "@id": SCHEMA_IDS.organization,
   name: SITE_NAME,
   url: SITE_URL,
-  logo: absoluteUrl("/icon.svg"),
+  description: SITE_DESCRIPTION,
   email: SITE_EMAIL,
+  logo: {
+    "@type": "ImageObject",
+    "@id": SCHEMA_IDS.logo,
+    url: absoluteUrl(LOGO_PATH),
+    contentUrl: absoluteUrl(LOGO_PATH),
+    width: 512,
+    height: 512,
+    caption: SITE_NAME,
+  },
+  image: { "@id": SCHEMA_IDS.logo },
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: SITE_EMAIL,
+    url: absoluteUrl("/contact"),
+    availableLanguage: ["English"],
+  },
+  ...(SOCIAL_PROFILES.length > 0 ? { sameAs: SOCIAL_PROFILES } : {}),
 };
 
 export const websiteJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "@id": `${SITE_URL}/#website`,
+  "@id": SCHEMA_IDS.website,
   name: SITE_NAME,
+  alternateName: `${SITE_NAME} Solve Calculator`,
   url: SITE_URL,
+  description: SITE_DESCRIPTION,
   inLanguage: "en-US",
-  publisher: { "@id": `${SITE_URL}/#organization` },
+  publisher: { "@id": SCHEMA_IDS.organization },
 };
 
 export type BreadcrumbItem = { name: string; href: string };

@@ -125,3 +125,22 @@ The sun/moon button in the header switches between light and dark themes. The ch
 `localStorage` under `theme`; visitors who never choose follow their device setting. An inline script in
 `app/layout.tsx` (from `lib/theme.ts`) applies the theme before the first paint to avoid a flash, and
 Tailwind's `dark:` variant is bound to the `dark` class on `<html>` in `app/globals.css`.
+
+## SEO checklist
+
+Built in:
+
+- Unique title, description, canonical URL, Open Graph and Twitter tags on every page (`lib/seo.ts`).
+- Site-wide `Organization` (PNG logo, contact point) and `WebSite` schema in `app/layout.tsx`.
+- Homepage: one connected JSON-LD graph — `WebPage`, `WebApplication`, `HowTo`, `FAQPage` and an
+  `ItemList` of math solutions — in `app/page.tsx`. Articles add `Article` + `BreadcrumbList`.
+- `sitemap.xml`, `robots.txt`, web app manifest, `/logo.png` (512×512) and an Apple touch icon.
+
+After deploying:
+
+1. Add your site to Google Search Console and Bing Webmaster Tools. Choose the HTML meta tag method and
+   put the code in `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` / `NEXT_PUBLIC_BING_SITE_VERIFICATION`, then redeploy.
+2. Submit `https://your-domain.com/sitemap.xml` in both tools.
+3. Test the homepage with Google's Rich Results Test and the Schema Markup Validator (validator.schema.org).
+4. Add official social profile URLs to `SOCIAL_PROFILES` in `lib/site.ts` once they exist.
+5. Do not add star ratings to the schema unless they come from real, visible user reviews.

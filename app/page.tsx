@@ -15,21 +15,14 @@ import {
   Zap,
 } from "lucide-react";
 import Calculator from "@/components/Calculator";
-import FAQ, { faqJsonLd, type FAQItem } from "@/components/FAQ";
+import FAQ, { type FAQItem } from "@/components/FAQ";
 import FeatureCard from "@/components/FeatureCard";
 import JsonLd from "@/components/JsonLd";
 import SectionHeading from "@/components/SectionHeading";
-import { CATEGORIES, getArticlesByCategory } from "@/lib/articles";
-import { pageMetadata } from "@/lib/seo";
-import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { ARTICLES, CATEGORIES, getArticlesByCategory } from "@/lib/articles";
+import { SCHEMA_IDS, pageMetadata } from "@/lib/seo";
+import { LAST_UPDATED, OG_IMAGE_PATH, SITE_NAME, SITE_URL, absoluteUrl } from "@/lib/site";
 
-export const metadata: Metadata = pageMetadata({
-  title: `Solve Calculator – Free Scientific Solver | ${SITE_NAME}`,
-  description:
-    "Free solve calculator with sin, cos, log, roots and factorials. An unblocked calculator that runs in any browser—no download, no sign-up.",
-  path: "/",
-  absoluteTitle: true,
-});
 
 const FUNCTIONS: { key: string; description: string; example: string }[] = [
   { key: "sin", description: "Sine of an angle (DEG or RAD)", example: "sin(30) = 0.5 in DEG" },
@@ -118,18 +111,138 @@ const FAQS: FAQItem[] = [
   },
 ];
 
-const webApplicationJsonLd = {
+const HOW_TO_STEPS: [string, string][] = [
+  ["Choose DEG or RAD", "Pick degrees for everyday angles or radians for calculus and physics problems."],
+  ["Enter your expression", "Tap the keys or type on your keyboard. Use parentheses to group terms."],
+  ["Press equals", "Press = or Enter. The answer appears in large text, rounded to 10 significant digits."],
+  ["Reuse your answer", "Tap Ans or an item in the history list to keep working with a previous result."],
+];
+
+const PAGE_TITLE = `Solve Calculator – Free Scientific Solver | ${SITE_NAME}`;
+const PAGE_DESCRIPTION =
+  "Free solve calculator with sin, cos, log, roots and factorials. An unblocked calculator that runs in any browser—no download, no sign-up.";
+
+const ids = {
+  webpage: `${SITE_URL}/#webpage`,
+  app: `${SITE_URL}/#calculator-app`,
+  faq: `${SITE_URL}/#faq`,
+  howTo: `${SITE_URL}/#how-to-use`,
+  library: `${SITE_URL}/#math-solutions`,
+  image: `${SITE_URL}/#primaryimage`,
+};
+
+/**
+ * One connected JSON-LD graph for the homepage. Organization and WebSite are emitted site-wide by
+ * app/layout.tsx and referenced here by @id. No ratings or reviews are included: Google treats
+ * self-made ratings as spam, so add aggregateRating only from genuine, visible user reviews.
+ */
+const homepageJsonLd = {
   "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: `${SITE_NAME} Solve Calculator`,
-  url: SITE_URL,
-  applicationCategory: "EducationalApplication",
-  operatingSystem: "Any (web browser)",
-  browserRequirements: "Requires JavaScript",
-  inLanguage: "en-US",
-  isAccessibleForFree: true,
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  publisher: { "@id": `${SITE_URL}/#organization` },
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": ids.webpage,
+      url: SITE_URL,
+      name: PAGE_TITLE,
+      description: PAGE_DESCRIPTION,
+      inLanguage: "en-US",
+      isPartOf: { "@id": SCHEMA_IDS.website },
+      about: { "@id": ids.app },
+      mainEntity: { "@id": ids.app },
+      primaryImageOfPage: { "@id": ids.image },
+      dateModified: LAST_UPDATED,
+      publisher: { "@id": SCHEMA_IDS.organization },
+      hasPart: [{ "@id": ids.howTo }, { "@id": ids.faq }, { "@id": ids.library }],
+    },
+    {
+      "@type": "ImageObject",
+      "@id": ids.image,
+      url: absoluteUrl(OG_IMAGE_PATH),
+      contentUrl: absoluteUrl(OG_IMAGE_PATH),
+      width: 1200,
+      height: 630,
+      caption: `${SITE_NAME} – Free Online Solve Calculator`,
+    },
+    {
+      "@type": "WebApplication",
+      "@id": ids.app,
+      name: `${SITE_NAME} Solve Calculator`,
+      alternateName: ["Solver Calculator", "Unblocked Calculator", "Online Scientific Calculator"],
+      url: SITE_URL,
+      description: PAGE_DESCRIPTION,
+      applicationCategory: "EducationalApplication",
+      applicationSubCategory: "Scientific Calculator",
+      operatingSystem: "Any (web browser)",
+      browserRequirements: "Requires JavaScript and a modern web browser",
+      inLanguage: "en-US",
+      isAccessibleForFree: true,
+      image: { "@id": ids.image },
+      screenshot: { "@id": ids.image },
+      featureList: FUNCTIONS.map((fn) => `${fn.key}: ${fn.description}`),
+      audience: {
+        "@type": "EducationalAudience",
+        educationalRole: "student",
+        audienceType: "Students, teachers and professionals",
+      },
+      offers: {
+        "@type": "Offer",
+        price: "0",
+        priceCurrency: "USD",
+        availability: "https://schema.org/InStock",
+        category: "free",
+      },
+      publisher: { "@id": SCHEMA_IDS.organization },
+    },
+    {
+      "@type": "HowTo",
+      "@id": ids.howTo,
+      name: "How to Use the Solve Calculator",
+      description: "Solve any expression with the free online scientific calculator in four steps.",
+      totalTime: "PT1M",
+      tool: { "@type": "HowToTool", name: `${SITE_NAME} Solve Calculator` },
+      step: HOW_TO_STEPS.map(([name, text], index) => ({
+        "@type": "HowToStep",
+        position: index + 1,
+        name,
+        text,
+        url: `${SITE_URL}/#how-to-use`,
+      })),
+    },
+    {
+      "@type": "FAQPage",
+      "@id": ids.faq,
+      isPartOf: { "@id": ids.webpage },
+      mainEntity: FAQS.map((item) => ({
+        "@type": "Question",
+        name: item.question,
+        acceptedAnswer: { "@type": "Answer", text: item.answer },
+      })),
+    },
+    {
+      "@type": "ItemList",
+      "@id": ids.library,
+      name: "Math Solutions Library",
+      numberOfItems: ARTICLES.length,
+      itemListElement: ARTICLES.map((article, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        url: absoluteUrl(`/math/${article.slug}`),
+        name: article.title,
+      })),
+    },
+  ],
+};
+
+export const metadata: Metadata = {
+  ...pageMetadata({ title: PAGE_TITLE, description: PAGE_DESCRIPTION, path: "/", absoluteTitle: true }),
+  keywords: [
+    "solve calculator",
+    "solver calculator",
+    "calculator unblocked",
+    "unblocked calculator",
+    "scientific calculator online",
+    "free online calc",
+  ],
 };
 
 const sectionClass = "scroll-mt-20 px-4 py-16 sm:px-6 sm:py-20";
@@ -253,12 +366,7 @@ export default function HomePage() {
             subtitle="Four quick steps, plus a reference for every key."
           />
           <ol className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              ["Choose DEG or RAD", "Pick degrees for everyday angles or radians for calculus and physics problems."],
-              ["Enter your expression", "Tap the keys or type on your keyboard. Use parentheses to group terms."],
-              ["Press equals", "Press = or Enter. The answer appears in large text, rounded to 10 significant digits."],
-              ["Reuse your answer", "Tap Ans or an item in the history list to keep working with a previous result."],
-            ].map(([title, text], index) => (
+            {HOW_TO_STEPS.map(([title, text], index) => (
               <li key={title} className="rounded-2xl border border-gray-200 p-6 dark:border-gray-800">
                 <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-indigo-600 font-bold text-white">
                   {index + 1}
@@ -519,8 +627,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <JsonLd data={webApplicationJsonLd} />
-      <JsonLd data={faqJsonLd(FAQS)} />
+      <JsonLd data={homepageJsonLd} />
     </>
   );
 }
