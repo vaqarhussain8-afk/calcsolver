@@ -5,10 +5,23 @@
 
 export const SITE_NAME = "SolverCalc";
 
-/** Production URL without a trailing slash. Can be overridden with NEXT_PUBLIC_SITE_URL. */
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.solvercalc.app").replace(/\/$/, "");
+/** Production URL without a trailing slash. */
+export const SITE_URL = "https://www.solvercalc.app";
 
 export const SITE_EMAIL = "hello@solvercalc.app";
+
+/** Google Search Console ownership verification (HTML tag method). */
+export const GOOGLE_SITE_VERIFICATION = "jhrbGOS1ItBA5bU1KOBUx6EtV8EyOh3g4zJbXtnyiJE";
+
+/** Bing Webmaster Tools verification code ("msvalidate.01" content). Leave empty until you have one. */
+export const BING_SITE_VERIFICATION = "";
+
+/** Google Analytics 4 measurement ID, e.g. "G-ABC123XYZ". Empty = analytics disabled. Loaded only after cookie consent. */
+export const GA_MEASUREMENT_ID = "";
+
+/** Where contact form messages are delivered, and the sender shown on them. */
+export const CONTACT_TO_EMAIL = SITE_EMAIL;
+export const CONTACT_FROM_EMAIL = "SolverCalc <noreply@solvercalc.app>";
 
 export const SITE_TAGLINE = "Free online scientific solve calculator for students, teachers and professionals.";
 

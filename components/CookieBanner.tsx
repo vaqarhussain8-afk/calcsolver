@@ -4,8 +4,9 @@ import Link from "next/link";
 import Script from "next/script";
 import { useEffect, useRef, useState } from "react";
 import { OPEN_COOKIE_SETTINGS_EVENT, readConsent, saveConsent, type CookieConsent } from "@/lib/consent";
+import { GA_MEASUREMENT_ID } from "@/lib/site";
 
-const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
+const GA_ID = GA_MEASUREMENT_ID;
 
 export default function CookieBanner() {
   const [consent, setConsent] = useState<CookieConsent | null>(null);

@@ -6,7 +6,14 @@ import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";
 import JsonLd from "@/components/JsonLd";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
-import { SITE_DESCRIPTION, SITE_LOCALE, SITE_NAME, SITE_URL } from "@/lib/site";
+import {
+  BING_SITE_VERIFICATION,
+  GOOGLE_SITE_VERIFICATION,
+  SITE_DESCRIPTION,
+  SITE_LOCALE,
+  SITE_NAME,
+  SITE_URL,
+} from "@/lib/site";
 import { THEME_INIT_SCRIPT } from "@/lib/theme";
 
 const inter = Inter({
@@ -48,12 +55,10 @@ export const metadata: Metadata = {
   category: "education",
   referrer: "origin-when-cross-origin",
   appleWebApp: { capable: true, title: SITE_NAME, statusBarStyle: "default" },
-  // Search Console / Bing Webmaster verification codes (set in Vercel environment variables).
+  // Search Console / Bing Webmaster verification codes (set in lib/site.ts).
   verification: {
-    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || undefined,
-    other: process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
-      ? { "msvalidate.01": process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
-      : undefined,
+    google: GOOGLE_SITE_VERIFICATION,
+    other: BING_SITE_VERIFICATION ? { "msvalidate.01": BING_SITE_VERIFICATION } : undefined,
   },
 };
 

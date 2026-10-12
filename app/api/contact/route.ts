@@ -1,22 +1,24 @@
 import { NextResponse } from "next/server";
 import { normalizeContactInput, validateContact, type ContactInput } from "@/lib/contact";
-import { SITE_NAME } from "@/lib/site";
+import { CONTACT_FROM_EMAIL, CONTACT_TO_EMAIL, SITE_NAME } from "@/lib/site";
 
 export const runtime = "nodejs";
 
 /**
- * Sends the message with Resend when RESEND_API_KEY and CONTACT_TO_EMAIL are configured.
- * Returns false when no email service is configured.
+ * Sends the message with Resend. Recipient and sender are set in lib/site.ts.
+ * Returns false when no API key is configured.
  *
- * TODO: Plug in your email provider here. Options:
- *   - Resend (implemented below): set RESEND_API_KEY, CONTACT_TO_EMAIL and CONTACT_FROM_EMAIL.
- *   - Nodemailer: `npm i nodemailer`, create a SMTP transport from env vars and call transporter.sendMail().
- *   - Formspree: POST the same JSON to https://formspree.io/f/<FORM_ID> with an "Accept: application/json" header.
+ * The API key is a secret, so it is NOT hardcoded (this repository is public). Add RESEND_API_KEY in
+ * Vercel → Settings → Environment Variables.
+ *
+ * TODO: To use another provider, replace this function:
+ *   - Nodemailer: `npm i nodemailer`, create an SMTP transport and call transporter.sendMail().
+ *   - Formspree: POST the same JSON to https://formspree.io/f/<FORM_ID> with an "Accept: application/json"
+ *     header. The form ID is not secret, so it can be hardcoded.
  */
 async function deliver(input: ContactInput): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
-  const to = process.env.CONTACT_TO_EMAIL;
-  if (!apiKey || !to) return false;
+  if (!apiKey) return false;
 
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -25,8 +27,8 @@ async function deliver(input: ContactInput): Promise<boolean> {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: process.env.CONTACT_FROM_EMAIL ?? `${SITE_NAME} <onboarding@resend.dev>`,
-      to: [to],
+      from: CONTACT_FROM_EMAIL,
+      to: [CONTACT_TO_EMAIL],
       reply_to: input.email,
       subject: `[${SITE_NAME} contact] ${input.subject}`,
       text: `Name: ${input.name}\nEmail: ${input.email}\n\n${input.message}`,
