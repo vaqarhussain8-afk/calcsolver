@@ -1,0 +1,76 @@
+/**
+ * Central site configuration.
+ * Change the brand, domain or contact email here and it updates everywhere.
+ */
+
+export const SITE_NAME = "CalcSolver";
+
+/** Production URL without a trailing slash. Can be overridden with NEXT_PUBLIC_SITE_URL. */
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://www.calcsolver.com").replace(/\/$/, "");
+
+export const SITE_EMAIL = "hello@calcsolver.com";
+
+export const SITE_TAGLINE = "Free online scientific solve calculator for students, teachers and professionals.";
+
+export const SITE_DESCRIPTION =
+  "Free online solve calculator with scientific functions, step-by-step math solutions and quick fraction-to-percentage answers. No download, no sign-up.";
+
+export const SITE_LOCALE = "en_US";
+
+/** Shown on the legal pages and used as lastModified for static pages in the sitemap. */
+export const LAST_UPDATED = "2026-10-12";
+
+export function formatDate(isoDate: string): string {
+  return new Date(`${isoDate}T00:00:00Z`).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    timeZone: "UTC",
+  });
+}
+
+export function absoluteUrl(path = "/"): string {
+  return `${SITE_URL}${path.startsWith("/") ? path : `/${path}`}`;
+}
+
+export type NavLink = { label: string; href: string };
+
+export const NAV_LINKS: NavLink[] = [
+  { label: "Home", href: "/" },
+  { label: "Algebra", href: "/math#basic-algebra" },
+  { label: "Percent & Decimal", href: "/math#percent-decimal" },
+  { label: "Fractions", href: "/math#fractions" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
+export const FOOTER_CALCULATOR_LINKS: NavLink[] = [
+  { label: "Solve Calculator", href: "/#calculator" },
+  { label: "Unblocked Calculator", href: "/#calculator-unblocked" },
+  { label: "Math Solutions", href: "/math" },
+  { label: "Fractions", href: "/math#fractions" },
+];
+
+export const FOOTER_COMPANY_LINKS: NavLink[] = [
+  { label: "About Us", href: "/about" },
+  { label: "Contact Us", href: "/contact" },
+];
+
+export const FOOTER_LEGAL_LINKS: NavLink[] = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Cookie Policy", href: "/cookie-policy" },
+  { label: "Terms of Use", href: "/terms" },
+  { label: "Disclaimer", href: "/disclaimer" },
+];
+
+/** Static routes listed in the sitemap. */
+export const STATIC_ROUTES = [
+  "/",
+  "/math",
+  "/about",
+  "/contact",
+  "/privacy-policy",
+  "/cookie-policy",
+  "/terms",
+  "/disclaimer",
+];
