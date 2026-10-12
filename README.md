@@ -50,7 +50,7 @@ public/images/           Illustration used on the homepage
 
 ```ts
 export const SITE_NAME = "SolverCalc";
-export const SITE_URL = "https://www.solvercalc.app";
+export const SITE_URL = "https://solvercalc.app";
 export const SITE_EMAIL = "hello@solvercalc.app";
 export const GOOGLE_SITE_VERIFICATION = "…";        // Search Console HTML tag code
 export const BING_SITE_VERIFICATION = "";           // Bing Webmaster Tools code
@@ -115,9 +115,9 @@ homepage library link, related links and JSON-LD are generated automatically.
 2. In Vercel, click **Add New → Project** and import the repository. The Next.js framework preset is detected
    automatically (build command `next build`).
 3. Optionally add the `RESEND_API_KEY` environment variable (the only one used).
-4. Deploy, then add `www.solvercalc.app` and `solvercalc.app` under **Settings → Domains**, with the bare
-   domain redirecting to `www`.
-5. Submit `https://www.solvercalc.app/sitemap.xml` in Google Search Console.
+4. Deploy, then add `solvercalc.app` and `www.solvercalc.app` under **Settings → Domains**, with `www`
+   redirecting to the bare domain `solvercalc.app`.
+5. Submit `https://solvercalc.app/sitemap.xml` in Google Search Console.
 
 ## Light and dark theme
 
@@ -140,7 +140,7 @@ After deploying:
 
 1. Google Search Console verification is already set (`GOOGLE_SITE_VERIFICATION` in `lib/site.ts`). For Bing
    Webmaster Tools, choose the HTML meta tag method and paste the code into `BING_SITE_VERIFICATION`.
-2. Submit `https://www.solvercalc.app/sitemap.xml` in both tools.
+2. Submit `https://solvercalc.app/sitemap.xml` in both tools.
 3. Test the homepage with Google's Rich Results Test and the Schema Markup Validator (validator.schema.org).
 4. Add official social profile URLs to `SOCIAL_PROFILES` in `lib/site.ts` once they exist.
 5. Do not add star ratings to the schema unless they come from real, visible user reviews.

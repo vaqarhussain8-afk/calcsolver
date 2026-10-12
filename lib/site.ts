@@ -6,7 +6,7 @@
 export const SITE_NAME = "SolverCalc";
 
 /** Production URL without a trailing slash. */
-export const SITE_URL = "https://www.solvercalc.app";
+export const SITE_URL = "https://solvercalc.app";
 
 export const SITE_EMAIL = "hello@solvercalc.app";
 
