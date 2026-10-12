@@ -5,13 +5,34 @@ import { Delete, History } from "lucide-react";
 import {
   appendToken,
   backspace,
-  evaluateExpression,
   formatResult,
   prettify,
   toggleSign,
   type AngleMode,
+  type EvalResult,
   type TokenKind,
-} from "@/lib/calculator";
+} from "@/lib/expression";
+
+type Evaluate = (expression: string, mode: AngleMode, ans: number | null) => EvalResult;
+
+/**
+ * mathjs is large, so the evaluator is downloaded only when the visitor first hovers, focuses or
+ * types into the calculator. Keys pressed before it arrives are kept and evaluated once it loads.
+ */
+let evaluator: Evaluate | null = null;
+let engineRequest: Promise<void> | null = null;
+
+function loadEngine(onReady: () => void): void {
+  if (evaluator) return;
+  if (!engineRequest) {
+    engineRequest = import("@/lib/calculator").then((engine) => {
+      evaluator = engine.evaluateExpression;
+    });
+  }
+  engineRequest.then(onReady).catch(() => {
+    engineRequest = null; // allow a retry on the next interaction (e.g. after a network hiccup)
+  });
+}
 
 type HistoryItem = { expression: string; result: string };
 
@@ -23,6 +44,8 @@ type State = {
   mode: AngleMode;
   error: boolean;
   history: HistoryItem[];
+  /** "=" was pressed before the evaluator finished loading. */
+  pendingEvaluate: boolean;
 };
 
 type Action =
@@ -32,7 +55,8 @@ type Action =
   | { type: "backspace" }
   | { type: "negate" }
   | { type: "mode"; mode: AngleMode }
-  | { type: "load"; expression: string };
+  | { type: "load"; expression: string }
+  | { type: "engine-ready" };
 
 const initialState: State = {
   expr: "",
@@ -42,19 +66,15 @@ const initialState: State = {
   mode: "deg",
   error: false,
   history: [],
+  pendingEvaluate: false,
 };
 
 /** Updates the expression and refreshes the live preview (keeps the previous preview if incomplete). */
 function withExpression(state: State, expr: string): State {
-  if (!expr) return { ...state, expr, lastExpr: null, error: false, display: "0" };
-  const preview = evaluateExpression(expr, state.mode, state.ans);
-  return {
-    ...state,
-    expr,
-    lastExpr: null,
-    error: false,
-    display: preview.ok ? preview.display : state.error ? "0" : state.display,
-  };
+  const base = { ...state, expr, lastExpr: null, error: false, pendingEvaluate: false };
+  if (!expr) return { ...base, display: "0" };
+  const preview = evaluator?.(expr, state.mode, state.ans);
+  return { ...base, display: preview?.ok ? preview.display : state.error ? "0" : state.display };
 }
 
 function reducer(state: State, action: Action): State {
@@ -71,16 +91,22 @@ function reducer(state: State, action: Action): State {
       return withExpression(state, toggleSign(state.expr));
     }
     case "clear":
-      return { ...state, expr: "", display: "0", lastExpr: null, error: false };
+      return { ...state, expr: "", display: "0", lastExpr: null, error: false, pendingEvaluate: false };
     case "mode": {
       const next = { ...state, mode: action.mode };
       return next.expr ? withExpression(next, next.expr) : next;
     }
     case "load":
       return withExpression(state, action.expression);
+    case "engine-ready": {
+      if (!state.expr) return state;
+      const refreshed = withExpression(state, state.expr);
+      return state.pendingEvaluate ? reducer(refreshed, { type: "evaluate" }) : refreshed;
+    }
     case "evaluate": {
       if (!state.expr) return state;
-      const result = evaluateExpression(state.expr, state.mode, state.ans);
+      if (!evaluator) return { ...state, pendingEvaluate: true };
+      const result = evaluator(state.expr, state.mode, state.ans);
       if (!result.ok) return { ...state, display: "Error", error: true };
       const item: HistoryItem = { expression: state.expr, result: result.display };
       return {
@@ -177,6 +203,7 @@ function keyToAction(key: string): Action | null {
 
 export default function Calculator() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const requestEngine = () => loadEngine(() => dispatch({ type: "engine-ready" }));
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
@@ -188,6 +215,7 @@ export default function Calculator() {
       const action = keyToAction(event.key);
       if (!action) return;
       event.preventDefault();
+      loadEngine(() => dispatch({ type: "engine-ready" }));
       dispatch(action);
     }
     window.addEventListener("keydown", onKeyDown);
@@ -205,6 +233,9 @@ export default function Calculator() {
       className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-4 shadow-xl shadow-indigo-100/50 sm:p-5 dark:border-gray-800 dark:bg-gray-900 dark:shadow-none"
       role="group"
       aria-label="Scientific calculator"
+      onPointerEnter={requestEngine}
+      onPointerDown={requestEngine}
+      onFocus={requestEngine}
       aria-describedby="calculator-help"
     >
       <p id="calculator-help" className="sr-only">
